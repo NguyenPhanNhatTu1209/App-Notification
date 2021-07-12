@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:todolist/src/screens/home_screen.dart';
 import 'package:todolist/src/screens/login_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -7,6 +9,41 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _retypePswController = TextEditingController();
+  String? email;
+  String? password;
+
+  tapRegisterButton() async {
+    if (_formKey.currentState!.validate()) {
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+          ),
+        ),
+        barrierColor: Colors.grey.shade100,
+        barrierDismissible: false,
+      );
+      final _auth = FirebaseAuth.instance;
+      var user = await _auth.createUserWithEmailAndPassword(
+        email: email!,
+        password: password!,
+      );
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        ),
+      );
+      print('lambiengcode ' + user.user!.uid.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,6 +53,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       body: Container(
           padding: EdgeInsets.all(20.0),
           child: Form(
+            key: _formKey,
             child: ListView(
               children: <Widget>[
                 Container(
@@ -36,39 +74,58 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ],
                     )),
                 Container(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                          hintText: 'User Name',
-                          labelText: 'Enter your user name',
-                          icon: Icon(Icons.person),
-                        ))),
-                Container(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                            hintText: 'you@example.com',
-                            labelText: 'E-mail Address',
-                            icon: Icon(Icons.email)))),
-                Container(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: TextFormField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          hintText: 'Password',
-                          labelText: 'Enter your password',
-                          icon: Icon(Icons.lock))),
+                    controller: _emailController,
+                    validator: (val) => val!.trim().length == 0
+                        ? 'Nhập email mới đc đăng kí'
+                        : null,
+                    onChanged: (val) {
+                      setState(() {
+                        email = val.trim();
+                      });
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: 'you@example.com',
+                      labelText: 'E-mail Address',
+                      icon: Icon(Icons.email),
+                    ),
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: TextFormField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          hintText: 'Confirm Password',
-                          labelText: 'Enter your confirm password',
-                          icon: Icon(Icons.lock))),
+                    controller: _passwordController,
+                    validator: (val) => val!.trim().length < 6
+                        ? 'Mật khẩu phải có tối thiểu 6 kí tự'
+                        : null,
+                    onChanged: (val) {
+                      password = val.trim();
+                    },
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Password',
+                      labelText: 'Enter your password',
+                      icon: Icon(Icons.lock),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: TextFormField(
+                    controller: _retypePswController,
+                    validator: (val) =>
+                        val!.trim() != password // UOC GI MAI DC AN KFC
+                            ? 'Mật khẩu không trùng khớp'
+                            : null,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      hintText: 'Confirm Password',
+                      labelText: 'Enter your confirm password',
+                      icon: Icon(Icons.lock),
+                    ),
+                  ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -83,9 +140,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           'Register',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen())),
+                        onPressed: () => tapRegisterButton(),
                         color: Colors.deepPurple,
                       ),
                     ),

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "159361337583",
-    "project_id": "todolist-7c558",
-    "storage_bucket": "todolist-7c558.appspot.com"
+    "project_number": "257427037429",
+    "project_id": "notification-tutorial-df1fd",
+    "storage_bucket": "notification-tutorial-df1fd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:159361337583:android:34db114fa3a6e1011b331a",
+        "mobilesdk_app_id": "1:257427037429:android:a918fb6fa2985f3d3279bc",
         "android_client_info": {
-          "package_name": "com.example.todolist"
+          "package_name": "com.app.notification"
         }
       },
       "oauth_client": [
         {
-          "client_id": "159361337583-8jpmjt1hc5gl73ivkbdkurtfcdt8kjuo.apps.googleusercontent.com",
+          "client_id": "257427037429-e021l71nukmmf4e4193bnpukkptjm391.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDIS8OTN4lWpI3u_f4F3PIOtG_mK8_Ybtk"
+          "current_key": "AIzaSyBoHREqGYCv8T7_RXwWusYjU3O7VfO3MPs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "159361337583-8jpmjt1hc5gl73ivkbdkurtfcdt8kjuo.apps.googleusercontent.com",
+              "client_id": "257427037429-e021l71nukmmf4e4193bnpukkptjm391.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
