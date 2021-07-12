@@ -40,7 +40,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           builder: (context) => HomeScreen(),
         ),
       );
-      print('lambiengcode ' + user.user!.uid.toString());
     }
   }
 

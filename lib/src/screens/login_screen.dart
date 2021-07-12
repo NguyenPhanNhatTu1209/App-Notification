@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/src/screens/home_screen.dart';
 import 'package:todolist/src/screens/registration_screen.dart';
@@ -8,6 +9,40 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  String? email;
+  String? password;
+
+  tapLoginButton() async {
+    if (_formKey.currentState!.validate()) {
+      showDialog(
+        context: context,
+        builder: (context) => Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+          ),
+        ),
+        barrierColor: Colors.grey.shade100,
+        barrierDismissible: false,
+      );
+      final _auth = FirebaseAuth.instance;
+      var user = await _auth.createUserWithEmailAndPassword(
+        email: email!,
+        password: password!,
+      );
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomeScreen(),
+        ),
+      );
+      print('lambiengcode ' + user.user!.uid.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +74,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: TextFormField(
+                        controller: _emailController,
+                        validator: (val) => val!.trim().length == 0
+                            ? 'Nhập email mới đc đăng kí'
+                            : null,
+                        onChanged: (val) {
+                          setState(() {
+                            email = val.trim();
+                          });
+                        },
                         keyboardType: TextInputType
                             .emailAddress, // Use email input type for emails.
                         decoration: InputDecoration(
@@ -48,6 +92,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: TextFormField(
+                      controller: _passwordController,
+                      validator: (val) => val!.trim().length < 6
+                          ? 'Mật khẩu phải có tối thiểu 6 kí tự'
+                          : null,
+                      onChanged: (val) {
+                        password = val.trim();
+                      },
                       obscureText: true, // Use secure text for passwords.
                       decoration: InputDecoration(
                           hintText: 'Password',
