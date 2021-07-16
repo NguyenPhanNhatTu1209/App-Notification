@@ -14,6 +14,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "257427037429-ard31ppi1did9lms37rb0b58rovmosak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.notification",
+            "certificate_hash": "c89a55cc73e5caa351dcccbee87e9781def4ea62"
+          }
+        },
+        {
+          "client_id": "257427037429-dhmf0as0s4g7ibhhru4ihiuukpl417m3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.notification",
+            "certificate_hash": "f7ab2cdd047ce0bc2f710bca668455e2ee56ebf9"
+          }
+        },
+        {
+          "client_id": "257427037429-p8pd30u4jtt15c5gvdratqv1duu2kf3f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.notification",
+            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          }
+        },
+        {
+          "client_id": "257427037429-s97b5oesf447dge77jafiq45pti50pr4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.notification",
+            "certificate_hash": "03fbf5380ef2e9c2ccb0b4c67d8466455d94b999"
+          }
+        },
+        {
           "client_id": "257427037429-e021l71nukmmf4e4193bnpukkptjm391.apps.googleusercontent.com",
           "client_type": 3
         }
