@@ -140,13 +140,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               horizontal: 50.0, vertical: 5.0),
                           child: SignInButton(
                             Buttons.Facebook,
-                            text: "Sign up with FaceBook",
+                            text: "Sign in with FaceBook",
                             onPressed: () async {
                               User? user =
                                   await Authentication.loginWithFacebook(
                                       context: context);
                               if (user != null) {
-                                print("zo dc ne");
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
@@ -163,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               horizontal: 50.0, vertical: 5.0),
                           child: SignInButton(
                             Buttons.Google,
-                            text: "Sign up with Google",
+                            text: "Sign in with Google",
                             onPressed: () async {
                               setState(() {
                                 _isSigningIn = true;
