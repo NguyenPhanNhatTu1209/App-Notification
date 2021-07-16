@@ -9,6 +9,6 @@ void main() async {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     title: 'Notification',
-    home: LoginScreen(),
+    home: App(),
   ));
 }

@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:todolist/src/screens/home_screen.dart';
 import 'package:todolist/src/screens/login_screen.dart';
 
-class RegistrationScreen extends StatefulWidget {
+class ChangePasswordScreen extends StatefulWidget {
   @override
-  _RegistrationScreenState createState() => new _RegistrationScreenState();
+  _ChangePasswordScreenState createState() => new _ChangePasswordScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordOldController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _retypePswController = TextEditingController();
-  String? email;
-  String? password;
+  String? passwordNew;
+  String? passwordOld;
 
-  tapRegisterButton() async {
+  tapChangePasswordButton() async {
     if (_formKey.currentState!.validate()) {
       showDialog(
         context: context,
@@ -28,18 +28,79 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         barrierColor: Colors.grey.shade100,
         barrierDismissible: false,
       );
-      final _auth = FirebaseAuth.instance;
-      var user = await _auth.createUserWithEmailAndPassword(
-        email: email!,
-        password: password!,
-      );
-      Navigator.pop(context);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
+      final _auth = FirebaseAuth.instance.currentUser;
+      var email = _auth!.email.toString();
+      print('EmailTu ' + email);
+      try {
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: passwordOld!,
+        );
+
+        _auth.updatePassword(passwordNew!).then((_) {
+          print("Successfully changed password");
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ),
+          );
+        }).catchError((error) {
+          print("Password can't be changed" + error.toString());
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangePasswordScreen(),
+            ),
+          );
+        });
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangePasswordScreen(),
+            ),
+          );
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+          Navigator.pop(context);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangePasswordScreen(),
+            ),
+          );
+        }
+      }
+      // var user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      //   email: email,
+      //   password: passwordOld!,
+      // );
+      // print('Tu ' + user.user!.uid.toString());
+      // if (user != null) {
+      //   _auth.updatePassword(passwordNew!);
+      //   Navigator.pop(context);
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => LoginScreen(),
+      //     ),
+      //   );
+      // } else {
+      //   Navigator.pop(context);
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //       builder: (context) => ChangePasswordScreen(),
+      //     ),
+      //   );
+      // }
     }
   }
 
@@ -75,20 +136,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Container(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: TextFormField(
-                    controller: _emailController,
-                    validator: (val) => val!.trim().length == 0
-                        ? 'Nhập email mới đc đăng kí'
+                    controller: _passwordOldController,
+                    validator: (val) => val!.trim().length < 6
+                        ? 'Mật khẩu phải có tối thiểu 6 kí tự'
                         : null,
                     onChanged: (val) {
-                      setState(() {
-                        email = val.trim();
-                      });
+                      passwordOld = val.trim();
                     },
-                    keyboardType: TextInputType.emailAddress,
+                    obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'you@example.com',
-                      labelText: 'E-mail Address',
-                      icon: Icon(Icons.email),
+                      hintText: 'Password Old',
+                      labelText: 'Enter your password old',
+                      icon: Icon(Icons.lock),
                     ),
                   ),
                 ),
@@ -100,12 +159,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ? 'Mật khẩu phải có tối thiểu 6 kí tự'
                         : null,
                     onChanged: (val) {
-                      password = val.trim();
+                      passwordNew = val.trim();
                     },
                     obscureText: true,
                     decoration: InputDecoration(
-                      hintText: 'Password',
-                      labelText: 'Enter your password',
+                      hintText: 'Password New',
+                      labelText: 'Enter your password new',
                       icon: Icon(Icons.lock),
                     ),
                   ),
@@ -114,10 +173,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   padding: const EdgeInsets.only(top: 10.0),
                   child: TextFormField(
                     controller: _retypePswController,
-                    validator: (val) =>
-                        val!.trim() != password // UOC GI MAI DC AN KFC
-                            ? 'Mật khẩu không trùng khớp'
-                            : null,
+                    validator: (val) => val!.trim() != passwordNew
+                        ? 'Mật khẩu không trùng khớp'
+                        : null,
                     obscureText: true,
                     decoration: InputDecoration(
                       hintText: 'Confirm Password',
@@ -136,10 +194,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           horizontal: 20.0, vertical: 40.0),
                       child: RaisedButton(
                         child: Text(
-                          'Register',
+                          'Change Password',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () => tapRegisterButton(),
+                        onPressed: () => tapChangePasswordButton(),
                         color: Colors.deepPurple,
                       ),
                     ),

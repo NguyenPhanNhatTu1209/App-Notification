@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/src/screens/home_screen.dart';
 import 'package:todolist/src/screens/registration_screen.dart';
+import 'package:todolist/src/screens/reset_password_screen.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -28,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
         barrierDismissible: false,
       );
       final _auth = FirebaseAuth.instance;
-      var user = await _auth.createUserWithEmailAndPassword(
+      var user = await _auth.signInWithEmailAndPassword(
         email: email!,
         password: password!,
       );
@@ -52,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
           padding: EdgeInsets.all(20.0),
           child: Form(
+            key: _formKey,
             child: ListView(
               children: <Widget>[
                 Container(
@@ -63,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: FadeInImage.assetNetwork(
                             placeholder: 'assets/images/loading.gif',
                             image:
-                                'https://scontent-sin6-4.xx.fbcdn.net/v/t1.15752-9/215782512_1171106806702316_5623792905438403312_n.png?_nc_cat=103&ccb=1-3&_nc_sid=ae9488&_nc_ohc=neFjkQiuBkIAX-4xKJh&_nc_ht=scontent-sin6-4.xx&oh=93ae785848ffb49f30bf4ad6c2a18188&oe=60EF1AD2',
+                                'https://truyenvn.com/tin/wp-content/uploads/2020/11/trai-ac-quy-cua-luffy-1.jpg',
                             fit: BoxFit.cover,
                             width: 150,
                             height: 150,
@@ -112,20 +115,38 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 50.0,
                       width: 210.0,
                       margin: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 40.0),
+                          horizontal: 50.0, vertical: 5.0),
                       child: RaisedButton(
                         child: Text(
                           'Login',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen())),
+                        onPressed: () => tapLoginButton(),
                         color: Colors.deepPurple,
                       ),
                     ),
                   ],
                 ),
+                Container(
+                    height: 50.0,
+                    width: 210.0,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 50.0, vertical: 5.0),
+                    child: SignInButton(
+                      Buttons.Facebook,
+                      text: "Sign up with FaceBook",
+                      onPressed: () {},
+                    )),
+                Container(
+                    height: 50.0,
+                    width: 210.0,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 50.0, vertical: 5.0),
+                    child: SignInButton(
+                      Buttons.Google,
+                      text: "Sign up with Google",
+                      onPressed: () {},
+                    )),
                 Container(
                   height: 50.0,
                   width: 210.0,
@@ -141,6 +162,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.green,
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      child: Text('Forgot Password?'),
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => ResetScreen()),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           )),
