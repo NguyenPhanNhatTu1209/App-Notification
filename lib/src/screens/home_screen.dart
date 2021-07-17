@@ -141,6 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('notifications')
+                  .where('userId',
+                      isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {

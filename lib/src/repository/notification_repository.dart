@@ -1,6 +1,8 @@
 // title, body, urlToImage, date, isDeleted
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class NotificationRepository {
   addNotification({title, body, urlToImage, date}) async {
@@ -9,6 +11,7 @@ class NotificationRepository {
       'body': body,
       'image': urlToImage,
       'date': date,
+      'userId': FirebaseAuth.instance.currentUser!.uid,
     });
   }
 
