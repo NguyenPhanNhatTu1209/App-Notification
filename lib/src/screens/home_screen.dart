@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:todolist/models/todo.dart';
 import 'package:todolist/src/Controllers/todo_controller.dart';
+import 'package:todolist/src/repository/user_repository.dart';
 import 'package:todolist/src/screens/change_password_screen.dart';
 import 'package:todolist/src/screens/create_notification_screen.dart';
 import 'package:todolist/src/screens/edit_notification_screen.dart';
@@ -25,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   printToken() async {
     String? token = await getFCMToken();
-    print(token.toString() + ' token ne');
+    await UserRepository().addTokenToUser(token!);
   }
 
   handleFCM() {
