@@ -24,11 +24,11 @@ class _LoginScreenState extends State<LoginScreen> {
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
           ),
         ),
-        barrierColor: Colors.grey.shade100,
+        barrierColor: Color(0x80000000),
         barrierDismissible: false,
       );
       final _auth = FirebaseAuth.instance;
-      var user = await _auth.createUserWithEmailAndPassword(
+      var user = await _auth.signInWithEmailAndPassword(
         email: email!,
         password: password!,
       );
@@ -39,7 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (context) => HomeScreen(),
         ),
       );
-      print('lambiengcode ' + user.user!.uid.toString());
+      print(
+          'lambiengcode ' + FirebaseAuth.instance.currentUser!.uid.toString());
     }
   }
 
@@ -52,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Container(
           padding: EdgeInsets.all(20.0),
           child: Form(
+            key: _formKey,
             child: ListView(
               children: <Widget>[
                 Container(
@@ -118,9 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           'Login',
                           style: TextStyle(color: Colors.white),
                         ),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen())),
+                        onPressed: () => tapLoginButton(),
                         color: Colors.deepPurple,
                       ),
                     ),
