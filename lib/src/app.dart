@@ -11,17 +11,28 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  final _auth = FirebaseAuth.instance;
-  User? _user;
-
+  final _auth = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
-    _user = _auth.currentUser;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _user == null ? LoginScreen() : HomeScreen();
+    print("Tu: " + _auth.toString());
+    return _auth == null ? LoginScreen() : HomeScreen();
   }
 }
+
+
+// class App extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//     final _auth = FirebaseAuth.instance.currentUser;
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: _auth == null ? LoginScreen() : HomeScreen(),
+//     );
+//   }
+// }
