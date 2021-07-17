@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -138,8 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Container(
           child: StreamBuilder(
-              stream: todoController.getToDoStream,
-              builder: (context, AsyncSnapshot snapshot) {
+              stream: FirebaseFirestore.instance
+                  .collection('notifications')
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Container(
                     child: Center(
@@ -147,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 } else {
-                  List<ToDo> data = snapshot.data;
+                  var data = snapshot.data!.docs;
                   return ListView.builder(
                       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                       itemCount: data.length,
