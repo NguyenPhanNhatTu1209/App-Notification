@@ -13,7 +13,10 @@ class StorageService {
     Reference storageRef =
         FirebaseStorage.instance.ref().child('Notifications').child(fileName);
     UploadTask uploadTask = storageRef.putFile(file);
-    var url = await uploadTask.snapshot.ref.getDownloadURL();
+    // var url = await uploadTask.snapshot.ref.getDownloadURL();
+    TaskSnapshot snapshot = await uploadTask;
+    var downUrl = await snapshot.ref.getDownloadURL();
+    String url = downUrl.toString();
     return url;
   }
 }
